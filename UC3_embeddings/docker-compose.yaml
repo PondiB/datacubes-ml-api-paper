@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: embeddings_dc
+    container_name: embeddings-dc
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PYTHONLOGLEVEL: "ERROR"
+      OPD_ML_MODEL_EXECUTION_MODE: "dask"
+    volumes:
+      - ./results:/app/openeo-processes-dask-ml/results
+      - ./tmp:/app/openeo-processes-dask-ml/tmp
