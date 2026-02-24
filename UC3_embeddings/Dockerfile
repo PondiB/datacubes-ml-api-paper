@@ -1,5 +1,5 @@
 # Use official Python 3.11 image
-FROM python:3.11-slim
+FROM ghcr.io/osgeo/gdal:ubuntu-small-3.12.2
 
 # Prevent Python from writing .pyc files and enable unbuffered logs
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -29,11 +29,11 @@ WORKDIR /app
 RUN git clone https://github.com/Open-EO/openeo-processes-dask-ml.git
 
 WORKDIR /app/openeo-processes-dask-ml
-RUN git checkout class_mlm
+RUN git checkout paper-embeddings-uc
 
 
 # Install dependencies with extras --extras "torch onnx scikit-learn"
-RUN poetry install --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi --extras torch
 
 # Default command (adjust as needed)
 CMD ["python", "examples/make_embeddings.py"]
