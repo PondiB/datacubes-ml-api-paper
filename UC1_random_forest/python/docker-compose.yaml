@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: opd-rf
+    container_name: opd-rf
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PYTHONLOGLEVEL: "ERROR"
+    volumes:
+      - ./results:/app/openeo-processes-dask-ml/results
