@@ -1,4 +1,4 @@
-# Use official Python 3.11 image
+# Use GDAL 3.12.2 caontainer with ubuntu, comes with Python 3.12
 FROM ghcr.io/osgeo/gdal:ubuntu-small-3.12.2
 
 # Prevent Python from writing .pyc files and enable unbuffered logs
