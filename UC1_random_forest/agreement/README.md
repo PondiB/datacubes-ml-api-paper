@@ -10,6 +10,8 @@ From this directory:
 ```bash
 uv sync
 uv run agreement.py
+uv run figure5.py
 ```
 
-Metrics are printed to the terminal. The confusion matrix figure is saved to `results/confusion_matrix.png`.
+- `agreement.py` prints accuracy, kappa, and Pontius metrics; saves `results/confusion_matrix.png`
+- `figure5.py` saves side-by-side crop maps to `results/figure5.pdf` and `results/figure5.png`
