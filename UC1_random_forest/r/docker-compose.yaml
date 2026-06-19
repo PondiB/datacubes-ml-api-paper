@@ -6,25 +6,23 @@ services:
       - "${OPENEO_PORT:-8000}:8000"
 
   uc1-random-forest-runner:
-    image: rocker/r-ver:4.4
+    build:
+      context: .
+      dockerfile: Dockerfile.r
     container_name: openeocubes-uc1-rf
+    network_mode: service:openeocubes-backend
     depends_on:
       openeocubes-backend:
         condition: service_started
     working_dir: /work
     environment:
-      OPENEO_HOST: ${OPENEO_HOST:-http://openeocubes-backend:8000}
-      OPENEO_USER: ${OPENEO_USER:-brian}
-      OPENEO_PASSWORD: ${OPENEO_PASSWORD:-123456}
+      OPENEO_HOST: ${OPENEO_HOST:-http://127.0.0.1:8000}
+      OPENEO_USER: ${OPENEO_USER:-user}
+      OPENEO_PASSWORD: ${OPENEO_PASSWORD:-password}
       OUTPUT_DIR: /work/results
       PROCESS_GRAPH: /work/full_pg.json
     volumes:
       - ./run_pg.R:/work/run_pg.R:ro
       - ./full_pg.json:/work/full_pg.json:ro
       - ./results:/work/results
-    command:
-      - bash
-      - -lc
-      - >
-        Rscript -e "if (!requireNamespace('openeo', quietly = TRUE)) install.packages(c('openeo','jsonlite'), repos='https://cloud.r-project.org')"
-        && Rscript /work/run_pg.R
+    command: ["Rscript", "/work/run_pg.R"]
