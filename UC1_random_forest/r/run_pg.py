@@ -44,9 +44,9 @@ def connect_with_retry(
 
 
 def main() -> None:
-    host = normalize_host(env("OPENEO_HOST", "http://localhost:8000"))
-    user = env("OPENEO_USER", "brian")
-    password = env("OPENEO_PASSWORD", "123456")
+    host = normalize_host(env("OPENEO_HOST", "http://127.0.0.1:8000"))
+    user = env("OPENEO_USER", "user")
+    password = env("OPENEO_PASSWORD", "password")
     output_dir = Path(os.environ.get("OUTPUT_DIR", "./results"))
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -66,7 +66,6 @@ def main() -> None:
     cube.execute_batch(
         outputfile=str(output_file),
         title="UC1 random forest (openEOcubes)",
-        auto_add_save_result=False,
     )
     print(f"Done. Result saved to {output_file}")
 
