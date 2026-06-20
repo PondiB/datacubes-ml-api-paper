@@ -5,5 +5,8 @@ description = "Submit UC1 random forest process graph to openEOcubes"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "matplotlib>=3.10.9",
+    "numpy>=2.0.0",
     "openeo>=0.35.0",
+    "rasterio>=1.5.0",
 ]

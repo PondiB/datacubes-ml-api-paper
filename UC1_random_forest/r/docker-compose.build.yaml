@@ -1,0 +1,11 @@
+# Optional override: build openEOcubes from a local checkout instead of Docker Hub.
+#
+# Usage:
+#   OPENEOCUBES_ROOT=/path/to/openeocubes docker compose -f docker-compose.yaml -f docker-compose.build.yaml up --build
+#
+services:
+  openeocubes-backend:
+    image: openeocubes-local
+    platform: linux/amd64
+    build:
+      context: ${OPENEOCUBES_ROOT}
