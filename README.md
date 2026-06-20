@@ -1,5 +1,12 @@
 # openEO ML Showcase
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](UC1_random_forest/r)
+[![Python](https://img.shields.io/badge/Python-3.13+-3776AB?logo=python&logoColor=white)](UC1_random_forest/r)
+[![R](https://img.shields.io/badge/R-4.2+-276DC3?logo=r&logoColor=white)](UC2_tempcnn/r)
+[![openEO](https://img.shields.io/badge/openEO-API-0099CC)](https://openeo.org/)
+[![uv](https://img.shields.io/badge/uv-managed-DE5FE9)](https://docs.astral.sh/uv/)
+
 Examples for ML workflows on Earth observation datacubes using the openEO client API: training, inference, and embedding-style outputs. Each use case is self-contained under its folder with Docker (and Compose where noted).
 
 ## Use cases
