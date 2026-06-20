@@ -61,12 +61,19 @@ def main() -> None:
     print(f"Loading process graph from: {process_graph}")
     cube = connection.datacube_from_json(str(process_graph))
 
-    output_file = output_dir / "result_openeocubes.gtiff"
+    output_file = output_dir / "result.tif"
     print(f"Submitting batch job (output -> {output_file})")
-    cube.execute_batch(
-        outputfile=str(output_file),
-        title="UC1 random forest (openEOcubes)",
-    )
+    job = cube.create_job(title="UC1 random forest (openEOcubes)")
+    job.start_and_wait()
+    assets = job.get_results().get_assets()
+    raster_assets = [a for a in assets if a.name.endswith((".tif", ".tiff", ".gtiff"))]
+    if not raster_assets:
+        raise RuntimeError(
+            f"No raster result asset found. Available assets: {[a.name for a in assets]}"
+        )
+    raster_asset = raster_assets[0]
+    print(f"Downloading result asset: {raster_asset.name}")
+    output_file.write_bytes(raster_asset.load_bytes())
     print(f"Done. Result saved to {output_file}")
 
 

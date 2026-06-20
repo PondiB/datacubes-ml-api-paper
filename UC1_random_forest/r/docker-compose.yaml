@@ -1,14 +1,19 @@
 services:
   openeocubes-backend:
     image: brianpondi/openeocubes
+    platform: linux/amd64
     container_name: openeocubes-backend
     ports:
       - "${OPENEO_PORT:-8000}:8000"
+    environment:
+      TZ: Etc/UTC
+      OPENEO_ASYNC_JOB_TIMEOUT_SEC: "3600"
+      OPENEO_STALE_OUTPUT_FINALIZE_SEC: "30"
 
   uc1-random-forest-runner:
     build:
       context: .
-      dockerfile: Dockerfile.r
+      dockerfile: Dockerfile
     container_name: openeocubes-uc1-rf
     network_mode: service:openeocubes-backend
     depends_on:
@@ -22,7 +27,7 @@ services:
       OUTPUT_DIR: /work/results
       PROCESS_GRAPH: /work/full_pg.json
     volumes:
-      - ./run_pg.R:/work/run_pg.R:ro
+      - ./run_pg.py:/work/run_pg.py:ro
       - ./full_pg.json:/work/full_pg.json:ro
       - ./results:/work/results
-    command: ["Rscript", "/work/run_pg.R"]
+    command: ["uv", "run", "run_pg.py"]
