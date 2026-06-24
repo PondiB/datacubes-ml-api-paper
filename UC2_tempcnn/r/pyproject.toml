@@ -1,0 +1,11 @@
+[project]
+name = "uc2-tempcnn-viz"
+version = "0.1.0"
+description = "Visualize UC2 TempCNN deforestation classification outputs"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.10.0",
+    "numpy>=2.0.0",
+    "rasterio>=1.4.0",
+]

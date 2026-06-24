@@ -9,6 +9,24 @@ services:
     platform: linux/amd64
     ports:
       - "${OPENEO_PORT:-8001}:8000"
+    environment:
+      OPENEOCRAFT_API_BASE_URL: ${OPENEOCRAFT_API_BASE_URL:-http://openeocraft-backend:8000}
+      R_PROFILE_USER: /etc/openeocraft/Rprofile
+      OMP_NUM_THREADS: ${OMP_NUM_THREADS:-1}
+      MKL_NUM_THREADS: ${MKL_NUM_THREADS:-1}
+      OPENBLAS_NUM_THREADS: ${OPENBLAS_NUM_THREADS:-1}
+      TORCH_NUM_THREADS: ${TORCH_NUM_THREADS:-1}
+    command:
+      - bash
+      - /etc/openeocraft/entrypoint.sh
+    volumes:
+      - ./openeocraft-backend.Rprofile:/etc/openeocraft/Rprofile:ro
+      - ./backend-entrypoint.sh:/etc/openeocraft/entrypoint.sh:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "${OPENEOCRAFT_CPU_LIMIT:-8}"
+          memory: "${OPENEOCRAFT_MEM_LIMIT:-16g}"
 
   uc2-tempcnn-r:
     image: brianpondi/openeocraft:latest
@@ -23,16 +41,24 @@ services:
       - bash
       - -lc
       - >
-        Rscript -e "if (!requireNamespace('openeo', quietly = TRUE)) install.packages('openeo', repos='https://cloud.r-project.org')"
+        Rscript -e "if (!requireNamespace('openeo', quietly = TRUE)) {
+          if (!requireNamespace('remotes', quietly = TRUE)) install.packages('remotes', repos='https://cloud.r-project.org');
+          remotes::install_github('Open-EO/openeo-r-client', upgrade='never')
+        }"
+        && python3 -m pip install -q matplotlib numpy rasterio
         && Rscript /work/usecase2.R
     environment:
       OPENEO_HOST: ${OPENEO_HOST:-http://openeocraft-backend:8000}
-      OPENEO_USER: ${OPENEO_USER}
-      OPENEO_PASSWORD: ${OPENEO_PASSWORD}
+      OPENEO_USER: ${OPENEO_USER:-brian}
+      OPENEO_PASSWORD: ${OPENEO_PASSWORD:-123456}
       OUTPUT_DIR: /work/results
-      UC2_REGULARIZE_PERIOD: ${UC2_REGULARIZE_PERIOD:-}
-      UC2_GRID_RESOLUTION: ${UC2_GRID_RESOLUTION:-}
+      JOB_POLL_SECONDS: ${JOB_POLL_SECONDS:-30}
+      UC2_REGULARIZE_PERIOD: ${UC2_REGULARIZE_PERIOD:-P16D}
+      UC2_GRID_RESOLUTION: ${UC2_GRID_RESOLUTION:-30}
+      UC2_SPATIAL_AREA_FRACTION: ${UC2_SPATIAL_AREA_FRACTION:-1}
       UC2_COLLECTION_BANDS: ${UC2_COLLECTION_BANDS:-}
+      JOB_MAX_WAIT_SECONDS: ${JOB_MAX_WAIT_SECONDS:-172800}
     volumes:
       - ./usecase2.R:/work/usecase2.R:ro
+      - ./visualize.py:/work/visualize.py:ro
       - ./results:/work/results
